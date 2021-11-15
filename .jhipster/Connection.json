@@ -1,0 +1,46 @@
+{
+  "name": "Connection",
+  "fields": [
+    {
+      "fieldName": "createAt",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "longitude",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "latitude",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "ConnectionStatus",
+      "fieldValues": "APPROVE,DECLINE"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "connection",
+      "relationshipName": "user"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "request",
+      "otherEntityRelationshipName": "connection",
+      "relationshipName": "request"
+    }
+  ],
+  "entityTableName": "connection",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["MR_Project"],
+  "changelogDate": "20211115153836"
+}

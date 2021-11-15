@@ -1,0 +1,42 @@
+{
+  "name": "Rating",
+  "fields": [
+    {
+      "fieldName": "star",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "comment",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createAt",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "connection",
+      "otherEntityRelationshipName": "rating",
+      "relationshipName": "request",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "rating",
+      "relationshipName": "user"
+    }
+  ],
+  "entityTableName": "rating",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["MR_Project"],
+  "changelogDate": "20211115154036"
+}

@@ -1,0 +1,29 @@
+{
+  "mrProjectApp": {
+    "connection": {
+      "home": {
+        "title": "Connections",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Connection",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Connection",
+        "notFound": "No Connections found"
+      },
+      "created": "Một Connection mới được tạo với định danh {{ param }}",
+      "updated": "Một Connection cập nhật với định danh {{ param }}",
+      "deleted": "Một Connection đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Connection {{ id }}?"
+      },
+      "detail": {
+        "title": "Connection"
+      },
+      "id": "ID",
+      "createAt": "Create At",
+      "longitude": "Longitude",
+      "latitude": "Latitude",
+      "status": "Status",
+      "user": "User",
+      "request": "Request"
+    }
+  }
+}

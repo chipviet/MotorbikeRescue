@@ -1,0 +1,30 @@
+{
+  "mrProjectApp": {
+    "request": {
+      "home": {
+        "title": "Requests",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Thêm mới một Request",
+        "createOrEditLabel": "Thêm mới hoặc cập nhật Request",
+        "notFound": "No Requests found"
+      },
+      "created": "Một Request mới được tạo với định danh {{ param }}",
+      "updated": "Một Request cập nhật với định danh {{ param }}",
+      "deleted": "Một Request đã xóa với định danh {{ param }}",
+      "delete": {
+        "question": "Bạn có chắc là muốn xóa Request {{ id }}?"
+      },
+      "detail": {
+        "title": "Request"
+      },
+      "id": "ID",
+      "longitude": "Longitude",
+      "latitude": "Latitude",
+      "createAt": "Create At",
+      "message": "Message",
+      "status": "Status",
+      "connection": "Connection",
+      "user": "User"
+    }
+  }
+}

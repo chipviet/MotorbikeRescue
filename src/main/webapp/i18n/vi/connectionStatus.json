@@ -1,0 +1,9 @@
+{
+  "mrProjectApp": {
+    "ConnectionStatus": {
+      "null": "",
+      "APPROVE": "APPROVE",
+      "DECLINE": "DECLINE"
+    }
+  }
+}

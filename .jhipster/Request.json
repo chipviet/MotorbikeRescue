@@ -1,0 +1,50 @@
+{
+  "name": "Request",
+  "fields": [
+    {
+      "fieldName": "longitude",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "latitude",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createAt",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "message",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "RequestStatus",
+      "fieldValues": "SUCCESS,FAILURE,PROCESSING"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "connection",
+      "otherEntityRelationshipName": "request",
+      "relationshipName": "connection"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "request",
+      "relationshipName": "user"
+    }
+  ],
+  "entityTableName": "request",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["MR_Project"],
+  "changelogDate": "20211115153936"
+}

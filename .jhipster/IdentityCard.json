@@ -1,0 +1,52 @@
+{
+  "name": "IdentityCard",
+  "fields": [
+    {
+      "fieldName": "cardID",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dob",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "home",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "address",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sex",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nationality",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "doe",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "photo",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "identity_card",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["MR_Project"],
+  "changelogDate": "20211115154136"
+}

@@ -1,0 +1,32 @@
+{
+  "mrProjectApp": {
+    "identityCard": {
+      "home": {
+        "title": "Identity Cards",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Identity Card",
+        "createOrEditLabel": "Create or edit a Identity Card",
+        "notFound": "No Identity Cards found"
+      },
+      "created": "A new Identity Card is created with identifier {{ param }}",
+      "updated": "A Identity Card is updated with identifier {{ param }}",
+      "deleted": "A Identity Card is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Identity Card {{ id }}?"
+      },
+      "detail": {
+        "title": "Identity Card"
+      },
+      "id": "ID",
+      "cardID": "Card ID",
+      "name": "Name",
+      "dob": "Dob",
+      "home": "Home",
+      "address": "Address",
+      "sex": "Sex",
+      "nationality": "Nationality",
+      "doe": "Doe",
+      "photo": "Photo"
+    }
+  }
+}

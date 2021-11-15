@@ -1,0 +1,39 @@
+{
+  "name": "Device",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "deviceUuid",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "platform",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "version",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "device",
+      "relationshipName": "user"
+    }
+  ],
+  "entityTableName": "device",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["MR_Project"],
+  "changelogDate": "20211115154236"
+}

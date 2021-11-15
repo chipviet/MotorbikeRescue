@@ -1,0 +1,10 @@
+{
+  "mrProjectApp": {
+    "RequestStatus": {
+      "null": "",
+      "SUCCESS": "SUCCESS",
+      "FAILURE": "FAILURE",
+      "PROCESSING": "PROCESSING"
+    }
+  }
+}

@@ -1,0 +1,105 @@
+application {
+  config {
+    baseName MR_Project,
+    applicationType monolith,
+    packageName com.chipviet.project,
+    serverPort 8080,
+    prodDatabaseType mysql,
+    devDatabaseType mysql,
+    cacheProvider ehcache,
+    enableHibernateCache true,
+    buildTool maven,
+    enableSwaggerCodegen true,
+    clientFramework react,
+    authenticationType jwt,
+    languages [en,vi],
+    nativeLanguage en,
+    testFrameworks [protractor,gatling]
+  }
+  entities *
+}
+
+enum UserStatus {
+    ACTIVE, BLOCKED
+}
+
+enum WorkStatus {
+	AVAILABLE, BUSY, OFFLINE
+}
+
+enum RequestStatus {
+	SUCCESS, FAILURE, PROCESSING
+}
+
+enum ConnectionStatus {
+    APPROVE, DECLINE
+}
+
+entity Connection {
+	createAt String,
+    longitude String,
+    latitude String,
+    status ConnectionStatus,
+    createAt String
+}
+
+entity Request {
+	longitude String, 
+    latitude String,
+    createAt String,
+    message String,
+    status RequestStatus,
+    createAt String
+}
+
+entity Rating {
+	star Double,
+    comment String,
+    createAt String
+}
+
+entity IdentityCard {
+	cardID String ,
+    name String ,
+    dob String,
+    home String,
+    address String,
+    sex String,
+    nationality String,
+    doe String, 
+    photo String,
+}
+
+entity Device {
+	name String,
+    deviceUuid String,
+    platform String,
+    version String,
+}
+
+entity RescueTeam {
+	name String,
+    phoneNumber String,
+    longitude String,
+    latitude String,
+    address String
+    createAt String,
+}
+
+relationship OneToOne {
+    Rating {request} to Connection
+}
+
+relationship OneToMany {
+    Request to Connection{request}
+}
+
+relationship ManyToOne {
+    Connection{user} to User
+    Request {user} to User
+    Device {user} to User
+    Rating {user} to User
+}
+
+paginate Connection, Rating, IdentityCard, Device with pagination
+
