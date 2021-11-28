@@ -202,6 +202,9 @@ public class UserService {
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
                 user.setLangKey(userDTO.getLangKey());
+                user.setLatitude(userDTO.getLatitude());
+                user.setLongitude(userDTO.getLongitude());
+                user.setLicensePlate(userDTO.getLicensePlate());
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
                 userDTO
@@ -231,13 +234,27 @@ public class UserService {
     /**
      * Update basic information (first name, last name, email, language) for the current user.
      *
+     * @param userDTOFirstName
+     * @param name
+     * @param userDTOEmail
+     * @param key
      * @param firstName first name of user.
      * @param lastName  last name of user.
      * @param email     email id of user.
      * @param langKey   language key.
      * @param imageUrl  image URL of user.
      */
-    public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
+    public void updateUser(
+        String firstName,
+        String lastName,
+        String email,
+        String langKey,
+        String imageUrl,
+        String latitude,
+        String longitude,
+        String phoneNumber,
+        String licensePlate
+    ) {
         SecurityUtils
             .getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
@@ -249,6 +266,10 @@ public class UserService {
                 }
                 user.setLangKey(langKey);
                 user.setImageUrl(imageUrl);
+                user.setLicensePlate(licensePlate);
+                user.setPhoneNumber(phoneNumber);
+                user.setLongitude(longitude);
+                user.setLatitude(latitude);
                 this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
             });

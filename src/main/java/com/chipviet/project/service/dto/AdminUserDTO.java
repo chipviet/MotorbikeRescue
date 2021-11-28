@@ -6,6 +6,7 @@ import com.chipviet.project.domain.User;
 import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.persistence.Column;
 import javax.validation.constraints.*;
 
 /**
@@ -25,6 +26,18 @@ public class AdminUserDTO {
 
     @Size(max = 50)
     private String lastName;
+
+    @Size(max = 50)
+    private String phoneNumber;
+
+    @Size(max = 50)
+    private String licensePlate;
+
+    @Size(max = 256)
+    private String longitude;
+
+    @Size(max = 256)
+    private String latitude;
 
     @Email
     @Size(min = 5, max = 254)
@@ -57,6 +70,10 @@ public class AdminUserDTO {
         this.login = user.getLogin();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+        this.phoneNumber = user.getPhoneNumber();
+        this.licensePlate = user.getLicensePlate();
+        this.latitude = user.getLatitude();
+        this.longitude = user.getLongitude();
         this.email = user.getEmail();
         this.activated = user.isActivated();
         this.imageUrl = user.getImageUrl();
@@ -98,6 +115,38 @@ public class AdminUserDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
     public String getEmail() {
@@ -179,6 +228,10 @@ public class AdminUserDTO {
             "login='" + login + '\'' +
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
+            ", phoneNumber='" + phoneNumber + '\'' +
+            ", licensePlate='" + licensePlate + '\'' +
+            ", latitude='" + latitude + '\'' +
+            ", longitude='" + longitude + '\'' +
             ", email='" + email + '\'' +
             ", imageUrl='" + imageUrl + '\'' +
             ", activated=" + activated +

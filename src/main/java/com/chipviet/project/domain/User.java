@@ -51,6 +51,22 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "last_name", length = 50)
     private String lastName;
 
+    @Size(max = 50)
+    @Column(name = "phone_number", length = 50)
+    private String phoneNumber;
+
+    @Size(max = 50)
+    @Column(name = "license_plate", length = 50)
+    private String licensePlate;
+
+    @Size(max = 256)
+    @Column(name = "longitude", length = 256)
+    private String longitude;
+
+    @Size(max = 256)
+    @Column(name = "latitude", length = 256)
+    private String latitude;
+
     @Email
     @Size(min = 5, max = 254)
     @Column(length = 254, unique = true)
@@ -131,6 +147,38 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
     public String getEmail() {

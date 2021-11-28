@@ -88,6 +88,7 @@ entity RescueTeam {
 
 relationship OneToOne {
     Rating {request} to Connection
+    IdentityCard {user} to User
 }
 
 relationship OneToMany {
