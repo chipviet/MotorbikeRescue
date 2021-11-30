@@ -65,6 +65,16 @@ public class AccountResource {
         mailService.sendActivationEmail(user);
     }
 
+    @PostMapping("/register/repairer")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void registerRepairerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
+        if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+        User user = userService.registerRepairer(managedUserVM, managedUserVM.getPassword());
+        mailService.sendActivationEmail(user);
+    }
+
     /**
      * {@code GET  /activate} : activate the registered user.
      *

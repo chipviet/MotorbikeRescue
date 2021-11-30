@@ -9,6 +9,7 @@ import com.chipviet.project.security.AuthoritiesConstants;
 import com.chipviet.project.security.SecurityUtils;
 import com.chipviet.project.service.dto.AdminUserDTO;
 import com.chipviet.project.service.dto.UserDTO;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -93,41 +94,80 @@ public class UserService {
             });
     }
 
-    public User registerUser(AdminUserDTO userDTO, String password) {
+    public User registerRepairer(AdminUserDTO userDTO, String password) {
         userRepository
-            .findOneByLogin(userDTO.getLogin().toLowerCase())
+            .findOneByLogin(userDTO.getLogin())
             .ifPresent(existingUser -> {
-                boolean removed = removeNonActivatedUser(existingUser);
-                if (!removed) {
-                    throw new UsernameAlreadyUsedException();
-                }
+                throw new UsernameAlreadyUsedException();
             });
-        userRepository
-            .findOneByEmailIgnoreCase(userDTO.getEmail())
-            .ifPresent(existingUser -> {
-                boolean removed = removeNonActivatedUser(existingUser);
-                if (!removed) {
-                    throw new EmailAlreadyUsedException();
-                }
-            });
+        //        userRepository
+        //            .findOneByEmailIgnoreCase(userDTO.getEmail())
+        //            .ifPresent(existingUser -> {
+        //                boolean removed = removeNonActivatedUser(existingUser);
+        //                if (!removed) {
+        //                    throw new EmailAlreadyUsedException();
+        //                }
+        //            });
         User newUser = new User();
         String encryptedPassword = passwordEncoder.encode(password);
-        newUser.setLogin(userDTO.getLogin().toLowerCase());
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        System.out.println(timestamp.getTime());
+        //        String setLoginByTimestamp = Long.toString(timestamp.getTime());// 1616577123311
+        newUser.setLogin(userDTO.getPhoneNumber());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userDTO.getFirstName());
         newUser.setLastName(userDTO.getLastName());
+        newUser.setPhoneNumber(userDTO.getPhoneNumber());
+        newUser.setLicensePlate(userDTO.getLicensePlate());
+        newUser.setLongitude(userDTO.getLongitude());
+        newUser.setLatitude(userDTO.getLatitude());
         if (userDTO.getEmail() != null) {
             newUser.setEmail(userDTO.getEmail().toLowerCase());
         }
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
         // new user is not active
-        newUser.setActivated(false);
+        newUser.setActivated(true);
+        newUser.setStatus(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
-        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        authorityRepository.findById(AuthoritiesConstants.REPAIRER).ifPresent(authorities::add);
+        newUser.setAuthorities(authorities);
+        userRepository.save(newUser);
+        this.clearUserCaches(newUser);
+        log.debug("Created Information for User: {}", newUser);
+        return newUser;
+    }
+
+    public User registerUser(AdminUserDTO userDTO, String password) {
+        User newUser = new User();
+        String encryptedPassword = passwordEncoder.encode(password);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        System.out.println(timestamp.getTime());
+        String setLoginByTimestamp = Long.toString(timestamp.getTime()); // 1616577123311
+        newUser.setLogin(setLoginByTimestamp);
+        // new user gets initially a generated password
+        newUser.setPassword(encryptedPassword);
+        newUser.setFirstName(userDTO.getFirstName());
+        newUser.setLastName(userDTO.getLastName());
+        newUser.setPhoneNumber(userDTO.getPhoneNumber());
+        newUser.setLicensePlate(userDTO.getLicensePlate());
+        newUser.setLongitude(userDTO.getLongitude());
+        newUser.setLatitude(userDTO.getLatitude());
+        if (userDTO.getEmail() != null) {
+            newUser.setEmail(userDTO.getEmail().toLowerCase());
+        }
+        newUser.setImageUrl(userDTO.getImageUrl());
+        newUser.setLangKey(userDTO.getLangKey());
+        // new user is not active
+        newUser.setActivated(true);
+        newUser.setStatus(false);
+        // new user gets registration key
+        newUser.setActivationKey(RandomUtil.generateActivationKey());
+        Set<Authority> authorities = new HashSet<>();
+        authorityRepository.findById(AuthoritiesConstants.CUSTOMER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
