@@ -1,7 +1,9 @@
 package com.chipviet.project.web.rest;
 
 import com.chipviet.project.domain.Request;
+import com.chipviet.project.domain.User;
 import com.chipviet.project.repository.RequestRepository;
+import com.chipviet.project.repository.UserRepository;
 import com.chipviet.project.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,8 +36,11 @@ public class RequestResource {
 
     private final RequestRepository requestRepository;
 
-    public RequestResource(RequestRepository requestRepository) {
+    private final UserRepository userRepository;
+
+    public RequestResource(RequestRepository requestRepository, UserRepository userRepository) {
         this.requestRepository = requestRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -52,6 +57,9 @@ public class RequestResource {
             throw new BadRequestAlertException("A new request cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Request result = requestRepository.save(request);
+        List<User> listRepaier = userRepository.findRepairerNearest("16.065475", "108.170355");
+        log.debug("result: {}", listRepaier);
+
         return ResponseEntity
             .created(new URI("/api/requests/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

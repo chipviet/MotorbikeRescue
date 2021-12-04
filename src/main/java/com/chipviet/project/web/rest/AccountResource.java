@@ -1,5 +1,6 @@
 package com.chipviet.project.web.rest;
 
+import com.chipviet.project.domain.Request;
 import com.chipviet.project.domain.User;
 import com.chipviet.project.repository.UserRepository;
 import com.chipviet.project.security.SecurityUtils;
@@ -7,6 +8,7 @@ import com.chipviet.project.service.MailService;
 import com.chipviet.project.service.UserService;
 import com.chipviet.project.service.dto.AdminUserDTO;
 import com.chipviet.project.service.dto.PasswordChangeDTO;
+import com.chipviet.project.service.dto.PhoneNumberDTO;
 import com.chipviet.project.web.rest.errors.*;
 import com.chipviet.project.web.rest.vm.KeyAndPasswordVM;
 import com.chipviet.project.web.rest.vm.ManagedUserVM;
@@ -17,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -113,6 +116,18 @@ public class AccountResource {
             .getUserWithAuthorities()
             .map(AdminUserDTO::new)
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
+    }
+
+    /**
+     * {@code GET  /requests} : get all the requests.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of requests in body.
+     */
+    @GetMapping("/phoneNumber")
+    public Optional<User> getUserbyPhoneNumber() {
+        //        String phone = phoneNumber;
+        log.debug("REST request to get all Requests ");
+        return userRepository.findOneByPhoneNumber("0329456197");
     }
 
     /**

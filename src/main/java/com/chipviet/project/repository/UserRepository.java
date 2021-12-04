@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -29,6 +31,30 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findOneByEmailIgnoreCase(String email);
 
     Optional<User> findOneByLogin(String login);
+
+    Optional<User> findOneByPhoneNumber(String phoneNumber);
+
+    @Query(
+        value = "SELECT * FROM (" +
+        "    SELECT *, " +
+        "        (" +
+        "            (" +
+        "                (" +
+        "                    acos(" +
+        "                        sin(( :latitude * pi() / 180))" +
+        "                        *" +
+        "                        sin(( latitude * pi() / 180)) + cos((:latitude * pi() /180 ))" +
+        "                        *" +
+        "                        cos(( latitude * pi() / 180)) * cos((( :longitude - longitude) * pi()/180)))" +
+        "                ) * 180/pi()" +
+        "            ) * 60 * 1.1515 * 1.609344" +
+        "        )" +
+        "    as distance FROM jhi_user" +
+        ") User" +
+        " WHERE distance < 1",
+        nativeQuery = true
+    )
+    List<User> findRepairerNearest(@Param("latitude") String latitude, @Param("longitude") String longitude);
 
     @EntityGraph(attributePaths = "authorities")
     @Cacheable(cacheNames = USERS_BY_LOGIN_CACHE)
