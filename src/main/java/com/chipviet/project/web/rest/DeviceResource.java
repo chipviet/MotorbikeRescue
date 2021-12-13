@@ -1,7 +1,9 @@
 package com.chipviet.project.web.rest;
 
 import com.chipviet.project.domain.Device;
+import com.chipviet.project.domain.User;
 import com.chipviet.project.repository.DeviceRepository;
+import com.chipviet.project.service.dto.AddUserToDeviceDTO;
 import com.chipviet.project.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -54,6 +56,11 @@ public class DeviceResource {
     @PostMapping("/devices")
     public ResponseEntity<Device> createDevice(@RequestBody Device device) throws URISyntaxException {
         log.debug("REST request to save Device : {}", device);
+        Device A = deviceRepository.findByDeviceUuid(device.getDeviceUuid(), device.getUsedBy());
+        log.debug(" Device A : {}", A);
+        if (A != null) {
+            throw new BadRequestAlertException("A new device cannot already have an ID", ENTITY_NAME, "idexists");
+        }
         if (device.getId() != null) {
             throw new BadRequestAlertException("A new device cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -62,6 +69,25 @@ public class DeviceResource {
             .created(new URI("/api/devices/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code POST  /devices} : Create a new device.
+     *
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new device, or with status {@code 400 (Bad Request)} if the device has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/devices/addUser")
+    public ResponseEntity<Device> addUserDevice(@RequestBody AddUserToDeviceDTO payload) throws URISyntaxException {
+        log.debug("REST request to add user to device : {}", payload);
+        Device newDevice = deviceRepository.findByDeviceUuid(payload.getDeviceUuid(), payload.getUsedBy());
+        newDevice.setUser(payload.getUser());
+        log.debug("REST request to device : {}", newDevice);
+        //        if (payload.getDeviceUuid() != null) {
+        //            throw new BadRequestAlertException("A new device cannot already have an ID", ENTITY_NAME, "idexists");
+        //        }
+        Device result = deviceRepository.save(newDevice);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, "")).body(result);
     }
 
     /**

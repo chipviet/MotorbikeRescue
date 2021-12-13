@@ -32,6 +32,9 @@ public class Device implements Serializable {
     @Column(name = "version")
     private String version;
 
+    @Column(name = "used_by")
+    private String usedBy;
+
     @ManyToOne
     private User user;
 
@@ -102,6 +105,14 @@ public class Device implements Serializable {
         this.version = version;
     }
 
+    public String getUsedBy() {
+        return usedBy;
+    }
+
+    public void setUsedBy(String usedBy) {
+        this.usedBy = usedBy;
+    }
+
     public User getUser() {
         return this.user;
     }
@@ -143,6 +154,7 @@ public class Device implements Serializable {
             ", deviceUuid='" + getDeviceUuid() + "'" +
             ", platform='" + getPlatform() + "'" +
             ", version='" + getVersion() + "'" +
+            ", usedBy='" + getUsedBy() + "'" +
             "}";
     }
 }

@@ -8,7 +8,6 @@ import com.chipviet.project.service.MailService;
 import com.chipviet.project.service.UserService;
 import com.chipviet.project.service.dto.AdminUserDTO;
 import com.chipviet.project.service.dto.PasswordChangeDTO;
-import com.chipviet.project.service.dto.PhoneNumberDTO;
 import com.chipviet.project.web.rest.errors.*;
 import com.chipviet.project.web.rest.vm.KeyAndPasswordVM;
 import com.chipviet.project.web.rest.vm.ManagedUserVM;
@@ -60,12 +59,13 @@ public class AccountResource {
      */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
+    public User registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
         mailService.sendActivationEmail(user);
+        return user;
     }
 
     @PostMapping("/register/repairer")
@@ -123,7 +123,7 @@ public class AccountResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of requests in body.
      */
-    @GetMapping("/phoneNumber")
+    @GetMapping("/phoneNumber/{login}")
     public Optional<User> getUserbyPhoneNumber() {
         //        String phone = phoneNumber;
         log.debug("REST request to get all Requests ");

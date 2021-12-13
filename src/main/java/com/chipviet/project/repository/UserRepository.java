@@ -51,7 +51,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
         "        )" +
         "    as distance FROM jhi_user" +
         ") User" +
-        " WHERE distance < 1",
+        " WHERE distance < 3",
         nativeQuery = true
     )
     List<User> findRepairerNearest(@Param("latitude") String latitude, @Param("longitude") String longitude);
