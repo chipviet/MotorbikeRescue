@@ -732,7 +732,7 @@
                             </goals>
                         </execution>
                     </executions>
-                    <configuration>
+                    <!-- <configuration>
                         <rules>
                             <requireMavenVersion>
                                 <message>You are running an older version of Maven. JHipster requires at least Maven ${maven.version}</message>
@@ -743,7 +743,7 @@
                                 <version>[11,12),[12,13),[13,14),[14,15),[15,16),[16,17),[17,18)</version>
                             </requireJavaVersion>
                         </rules>
-                    </configuration>
+                    </configuration> -->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
