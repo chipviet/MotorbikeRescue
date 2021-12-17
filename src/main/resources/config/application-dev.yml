@@ -107,4 +107,4 @@ jhipster:
 # ===================================================================
 
 # application:
-java:runtime:version: 11
+java:runtime:version: 11.0.3
