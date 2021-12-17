@@ -1,10 +1,14 @@
 package com.chipviet.project.web.rest;
 
+import com.chipviet.project.domain.Device;
 import com.chipviet.project.domain.Request;
 import com.chipviet.project.domain.User;
+import com.chipviet.project.repository.DeviceRepository;
 import com.chipviet.project.repository.RequestRepository;
 import com.chipviet.project.repository.UserRepository;
+import com.chipviet.project.service.PushNotificationService;
 import com.chipviet.project.web.rest.errors.BadRequestAlertException;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -35,12 +39,14 @@ public class RequestResource {
     private String applicationName;
 
     private final RequestRepository requestRepository;
+    private final DeviceRepository deviceRepository;
 
     private final UserRepository userRepository;
 
-    public RequestResource(RequestRepository requestRepository, UserRepository userRepository) {
+    public RequestResource(RequestRepository requestRepository, UserRepository userRepository, DeviceRepository deviceRepository) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
+        this.deviceRepository = deviceRepository;
     }
 
     /**
@@ -57,11 +63,71 @@ public class RequestResource {
             throw new BadRequestAlertException("A new request cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Request result = requestRepository.save(request);
-        List<User> listRepaier = userRepository.findRepairerNearest("16.065475", "108.170355");
-        log.debug("result: {}", listRepaier);
+        List<User> listRepairer = userRepository.findRepairerNearest(request.getLatitude(), request.getLongitude());
+        log.debug("result: {}", listRepairer);
+        log.debug("request.getUser: {}", request.getUser().getLogin());
+        for (int i = 0; i < listRepairer.toArray().length; i++) {
+            User userObj = (User) Array.get(listRepairer.toArray(), i);
+            Optional<User> user = userRepository.findOneByLogin(userObj.getLogin());
+            log.debug("userObj.getLogin()  : {}", userObj.getLogin());
+            log.debug("request.getUser().getLogin()  : {}", request.getUser().getLogin());
+            if (!userObj.getLogin().equals(request.getUser().getLogin())) {
+                List<Device> devices = deviceRepository.findByUserObject(user);
+                log.debug("userObj.getPhoneNumber() : {}", userObj.getPhoneNumber());
+                try {
+                    PushNotificationService.sendMessageToUser(
+                        "There is someone near you who is having problems with their motorbike. Would you agree to help them?",
+                        devices,
+                        user
+                    );
+                } catch (Exception e) {
+                    throw e;
+                }
+            }
+        }
 
         return ResponseEntity
             .created(new URI("/api/requests/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code POST  /requests} : Create a new request.
+     *
+     * @param request the request to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new request, or with status {@code 400 (Bad Request)} if the request has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/confirm")
+    public ResponseEntity<Request> createConfirm(@RequestBody Request request) throws URISyntaxException {
+        log.debug("REST request to save Request : {}", request);
+        if (request.getId() != null) {
+            throw new BadRequestAlertException("A new request cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        Request result = requestRepository.save(request);
+        List<User> listRepairer = userRepository.findRepairerNearest(request.getLatitude(), request.getLongitude());
+        log.debug("result: {}", listRepairer);
+        log.debug("request.getUser: {}", request.getUser().getLogin());
+        for (int i = 0; i < listRepairer.toArray().length; i++) {
+            User userObj = (User) Array.get(listRepairer.toArray(), i);
+            Optional<User> user = userRepository.findOneByLogin(userObj.getLogin());
+            if (userObj.getLogin() != request.getUser().getLogin()) {
+                List<Device> devices = deviceRepository.findByUserObject(user);
+                log.debug("userObj.getPhoneNumber() : {}", userObj.getPhoneNumber());
+                try {
+                    PushNotificationService.sendMessageToUser(
+                        "There is someone near you who is having problems with their motorbike. Would you agree to help them?",
+                        devices,
+                        user
+                    );
+                } catch (Exception e) {
+                    throw e;
+                }
+            }
+        }
+        return ResponseEntity
+            .created(new URI("/api/confirm/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }

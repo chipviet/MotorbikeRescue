@@ -20,6 +20,9 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
     @Query("SELECT t from Device t where t.user = :user ")
     List<Device> findByUser(@Param("user") User user);
 
+    @Query("SELECT t from Device t where t.user = :user ")
+    List<Device> findByUserObject(@Param("user") Object user);
+
     @Query("SELECT t from Device t where t.deviceUuid = :deviceUuid and t.usedBy =:usedBy ")
     Device findByDeviceUuid(@Param("deviceUuid") String deviceUuid, @Param("usedBy") String usedBy);
 
