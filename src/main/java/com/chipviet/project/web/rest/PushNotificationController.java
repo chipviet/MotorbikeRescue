@@ -50,8 +50,9 @@ public class PushNotificationController {
         String success = "Successfully";
         Optional<User> user = userRepository.findOneByPhoneNumber(pushNotificationDTO.getPhoneNumber());
         List<Device> devices = deviceRepository.findByUser(user.get());
+        //        Long a = 1;
         try {
-            PushNotificationService.sendMessageToUser(pushNotificationDTO.getNotification(), devices, user);
+            //            PushNotificationService.sendMessageToUser(a,pushNotificationDTO.getNotification(), devices, user);
             return success;
         } catch (Exception e) {
             throw e;

@@ -7,6 +7,7 @@ import com.chipviet.project.repository.DeviceRepository;
 import com.chipviet.project.repository.RequestRepository;
 import com.chipviet.project.repository.UserRepository;
 import com.chipviet.project.service.PushNotificationService;
+import com.chipviet.project.service.dto.ConfirmDTO;
 import com.chipviet.project.web.rest.errors.BadRequestAlertException;
 import java.lang.reflect.Array;
 import java.net.URI;
@@ -76,6 +77,7 @@ public class RequestResource {
                 log.debug("userObj.getPhoneNumber() : {}", userObj.getPhoneNumber());
                 try {
                     PushNotificationService.sendMessageToUser(
+                        result.getId(),
                         "There is someone near you who is having problems with their motorbike. Would you agree to help them?",
                         devices,
                         user
@@ -99,38 +101,38 @@ public class RequestResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new request, or with status {@code 400 (Bad Request)} if the request has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/confirm")
-    public ResponseEntity<Request> createConfirm(@RequestBody Request request) throws URISyntaxException {
-        log.debug("REST request to save Request : {}", request);
-        if (request.getId() != null) {
-            throw new BadRequestAlertException("A new request cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        Request result = requestRepository.save(request);
-        List<User> listRepairer = userRepository.findRepairerNearest(request.getLatitude(), request.getLongitude());
-        log.debug("result: {}", listRepairer);
-        log.debug("request.getUser: {}", request.getUser().getLogin());
-        for (int i = 0; i < listRepairer.toArray().length; i++) {
-            User userObj = (User) Array.get(listRepairer.toArray(), i);
-            Optional<User> user = userRepository.findOneByLogin(userObj.getLogin());
-            if (userObj.getLogin() != request.getUser().getLogin()) {
-                List<Device> devices = deviceRepository.findByUserObject(user);
-                log.debug("userObj.getPhoneNumber() : {}", userObj.getPhoneNumber());
-                try {
-                    PushNotificationService.sendMessageToUser(
-                        "There is someone near you who is having problems with their motorbike. Would you agree to help them?",
-                        devices,
-                        user
-                    );
-                } catch (Exception e) {
-                    throw e;
-                }
-            }
-        }
-        return ResponseEntity
-            .created(new URI("/api/confirm/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
+    //    @PostMapping("/confirm")
+    //    public ResponseEntity<Request> createConfirm(@RequestBody ConfirmDTO confirm) throws URISyntaxException {
+    //        log.debug("REST request to save confirm : {}", confirm);
+    ////        if (request.getId() == null) {
+    ////            throw new BadRequestAlertException("A new request cannot already have an ID", ENTITY_NAME, "idexists");
+    ////        }
+    //        Request result = requestRepository.save(request);
+    //        List<User> listRepairer = userRepository.findRepairerNearest(request.getLatitude(), request.getLongitude());
+    //        log.debug("result: {}", listRepairer);
+    //        log.debug("request.getUser: {}", request.getUser().getLogin());
+    //        for (int i = 0; i < listRepairer.toArray().length; i++) {
+    //            User userObj = (User) Array.get(listRepairer.toArray(), i);
+    //            Optional<User> user = userRepository.findOneByLogin(userObj.getLogin());
+    //            if (userObj.getLogin() != request.getUser().getLogin()) {
+    //                List<Device> devices = deviceRepository.findByUserObject(user);
+    //                log.debug("userObj.getPhoneNumber() : {}", userObj.getPhoneNumber());
+    //                try {
+    //                    PushNotificationService.sendMessageToUser(result.getId(),
+    //                        "There is someone near you who is having problems with their motorbike. Would you agree to help them?",
+    //                        devices,
+    //                        user
+    //                    );
+    //                } catch (Exception e) {
+    //                    throw e;
+    //                }
+    //            }
+    //        }
+    //        return ResponseEntity
+    //            .created(new URI("/api/confirm/" + result.getId()))
+    //            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+    //            .body(result);
+    //    }
 
     /**
      * {@code PUT  /requests/:id} : Updates an existing request.

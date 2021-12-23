@@ -1,7 +1,15 @@
 package com.chipviet.project.web.rest;
 
 import com.chipviet.project.domain.Connection;
+import com.chipviet.project.domain.Device;
+import com.chipviet.project.domain.Request;
+import com.chipviet.project.domain.User;
 import com.chipviet.project.repository.ConnectionRepository;
+import com.chipviet.project.repository.DeviceRepository;
+import com.chipviet.project.repository.RequestRepository;
+import com.chipviet.project.repository.UserRepository;
+import com.chipviet.project.service.PushNotificationService;
+import com.chipviet.project.service.dto.ConfirmDTO;
 import com.chipviet.project.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,8 +48,49 @@ public class ConnectionResource {
 
     private final ConnectionRepository connectionRepository;
 
-    public ConnectionResource(ConnectionRepository connectionRepository) {
+    private final RequestRepository requestRepository;
+
+    private final UserRepository userRepository;
+
+    private final DeviceRepository deviceRepository;
+
+    public ConnectionResource(
+        ConnectionRepository connectionRepository,
+        RequestRepository requestRepository,
+        UserRepository userRepository,
+        DeviceRepository deviceRepository
+    ) {
         this.connectionRepository = connectionRepository;
+        this.requestRepository = requestRepository;
+        this.userRepository = userRepository;
+        this.deviceRepository = deviceRepository;
+    }
+
+    @PostMapping("/confirm")
+    public ResponseEntity<String> createConfirm(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
+        log.debug("REST request to save confirm : {}", confirmDTO.getId());
+        //        if (connection.getId() != null) {
+        //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
+        //        }
+        //        Connection result = connectionRepository.save(connection);
+
+        Optional<Request> request = requestRepository.findById(confirmDTO.getId());
+        Optional<User> user = userRepository.findById(request.get().getUser().getId());
+        log.debug("userObj.getLogin()  : {}", request.get().getId());
+        log.debug("user  : {}", user);
+        List<Device> devices = deviceRepository.findByUserObject(user);
+        try {
+            PushNotificationService.sendMessageToUser(
+                confirmDTO.getId(),
+                "Do you need help your motorbike? Please press the Accept button I will be right there to help you.",
+                devices,
+                user
+            );
+        } catch (Exception e) {
+            throw e;
+        }
+        log.debug("request : {}", request);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, "asd")).body("Success");
     }
 
     /**
@@ -53,11 +102,15 @@ public class ConnectionResource {
      */
     @PostMapping("/connections")
     public ResponseEntity<Connection> createConnection(@RequestBody Connection connection) throws URISyntaxException {
-        log.debug("REST request to save Connection : {}", connection);
-        if (connection.getId() != null) {
-            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
-        }
+        log.debug("REST request to save Connection : {}", connection.getRequest().getId());
+        //        if (connection.getId() != null) {
+        //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
+        //        }
         Connection result = connectionRepository.save(connection);
+
+        Optional<Request> request = requestRepository.findById(connection.getRequest().getId());
+
+        log.debug("request : {}", request);
         return ResponseEntity
             .created(new URI("/api/connections/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

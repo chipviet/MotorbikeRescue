@@ -7,4 +7,5 @@ public enum RequestStatus {
     SUCCESS,
     FAILURE,
     PROCESSING,
+    PENDING,
 }

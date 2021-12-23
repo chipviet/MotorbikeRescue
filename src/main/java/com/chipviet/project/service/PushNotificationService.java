@@ -81,7 +81,7 @@ public class PushNotificationService {
         return jsonResponse;
     }
 
-    public static void sendMessageToUser(String message, List<Device> devices, Optional<User> user) {
+    public static void sendMessageToUser(Long id, String message, List<Device> devices, Optional<User> user) {
         try {
             String jsonResponse;
 
@@ -108,7 +108,9 @@ public class PushNotificationService {
                 "\"include_player_ids\":" +
                 converToJsonStringify(deviceUuids) +
                 "," +
-                "\"data\": {\"title\": \"bar\"}," +
+                "\"data\": {\"title\": \"" +
+                id +
+                "\"}," +
                 "\"contents\": {\"en\": \"" +
                 message +
                 "\"}" +
