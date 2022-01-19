@@ -68,20 +68,20 @@ public class ConnectionResource {
 
     @PostMapping("/confirm")
     public ResponseEntity<String> createConfirm(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
-        log.debug("REST request to save confirm : {}", confirmDTO.getId());
+        log.debug("REST request to save confirm : {}", confirmDTO.getRequestId());
         //        if (connection.getId() != null) {
         //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
         //        }
         //        Connection result = connectionRepository.save(connection);
 
-        Optional<Request> request = requestRepository.findById(confirmDTO.getId());
+        Optional<Request> request = requestRepository.findById(confirmDTO.getRequestId());
         Optional<User> user = userRepository.findById(request.get().getUser().getId());
         log.debug("userObj.getLogin()  : {}", request.get().getId());
         log.debug("user  : {}", user);
         List<Device> devices = deviceRepository.findByUserObject(user);
         try {
             PushNotificationService.sendMessageToUser(
-                confirmDTO.getId(),
+                confirmDTO.getRequestId(),
                 "Do you need help your motorbike? Please press the Accept button I will be right there to help you.",
                 devices,
                 user
