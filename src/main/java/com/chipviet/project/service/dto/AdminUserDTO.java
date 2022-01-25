@@ -47,6 +47,8 @@ public class AdminUserDTO {
 
     private boolean activated = false;
 
+    private boolean status = false;
+
     @Size(min = 2, max = 10)
     private String langKey;
 
@@ -75,6 +77,7 @@ public class AdminUserDTO {
         this.longitude = user.getLongitude();
         this.email = user.getEmail();
         this.activated = user.isActivated();
+        this.status = user.isStatus();
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
         this.createdBy = user.getCreatedBy();
@@ -172,6 +175,14 @@ public class AdminUserDTO {
         this.activated = activated;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
     public String getLangKey() {
         return langKey;
     }
@@ -234,6 +245,7 @@ public class AdminUserDTO {
             ", email='" + email + '\'' +
             ", imageUrl='" + imageUrl + '\'' +
             ", activated=" + activated +
+            ", status=" + status + '\'' +
             ", langKey='" + langKey + '\'' +
             ", createdBy=" + createdBy +
             ", createdDate=" + createdDate +
