@@ -77,7 +77,7 @@ public class ConnectionResource {
         log.debug("userObj.getLogin()  : {}", request.get().getId());
         log.debug("user  : {}", user);
         List<Device> devices = deviceRepository.findByUserObject(user);
-        List<Device> firstUser = new ArrayList<Device>((Collection<? extends Device>) devices.get(0));
+        //        List<Device> firstUser = new ArrayList<Device>((Collection<? extends Device>) devices.get(0));
         try {
             PushNotificationService.sendMessageToUser(
                 confirmDTO.getRequestId(),
