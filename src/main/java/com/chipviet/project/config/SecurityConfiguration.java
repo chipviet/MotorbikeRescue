@@ -90,7 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/requests").permitAll()
             .antMatchers("/api/confirm").permitAll()
             .antMatchers("/api/connections").permitAll()
-            .antMatchers("/api/devices").permitAll()
+            .antMatchers("/api/devices/**").permitAll()
             .antMatchers("/api/devices/addUser").permitAll()
             .antMatchers("/api/v1/push-notification").permitAll()
             .antMatchers("/api/v1/push-notification/specific-user").permitAll()

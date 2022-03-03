@@ -241,6 +241,7 @@ public class UserService {
                 }
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
+                user.setStatus(userDTO.isStatus());
                 user.setLangKey(userDTO.getLangKey());
                 user.setLatitude(userDTO.getLatitude());
                 user.setLongitude(userDTO.getLongitude());

@@ -13,9 +13,7 @@ import com.chipviet.project.service.dto.ConfirmDTO;
 import com.chipviet.project.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,6 +77,7 @@ public class ConnectionResource {
         log.debug("userObj.getLogin()  : {}", request.get().getId());
         log.debug("user  : {}", user);
         List<Device> devices = deviceRepository.findByUserObject(user);
+        List<Device> firstUser = new ArrayList<Device>((Collection<? extends Device>) devices.get(0));
         try {
             PushNotificationService.sendMessageToUser(
                 confirmDTO.getRequestId(),
@@ -89,6 +88,33 @@ public class ConnectionResource {
         } catch (Exception e) {
             throw e;
         }
+        log.debug("request : {}", request);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, "asd")).body("Success");
+    }
+
+    @PostMapping("/decline")
+    public ResponseEntity<String> declineConfirm(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
+        log.debug("REST request to save confirm : {}", confirmDTO.getRequestId());
+        //        if (connection.getId() != null) {
+        //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
+        //        }
+        //        Connection result = connectionRepository.save(connection);
+
+        Optional<Request> request = requestRepository.findById(confirmDTO.getRequestId());
+        Optional<User> user = userRepository.findById(request.get().getUser().getId());
+        log.debug("userObj.getLogin()  : {}", request.get().getId());
+        log.debug("user  : {}", user);
+        List<Device> devices = deviceRepository.findByUserObject(user);
+        //        try {
+        //            PushNotificationService.sendMessageToUser(
+        //                confirmDTO.getRequestId(),
+        //                "Do you need help your motorbike? Please press the Accept button I will be right there to help you.",
+        //                devices,
+        //                user
+        //            );
+        //        } catch (Exception e) {
+        //            throw e;
+        //        }
         log.debug("request : {}", request);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, "asd")).body("Success");
     }
@@ -139,7 +165,6 @@ public class ConnectionResource {
         if (!Objects.equals(id, connection.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
-
         if (!connectionRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }

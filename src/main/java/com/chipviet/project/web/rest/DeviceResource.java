@@ -3,6 +3,7 @@ package com.chipviet.project.web.rest;
 import com.chipviet.project.domain.Device;
 import com.chipviet.project.domain.User;
 import com.chipviet.project.repository.DeviceRepository;
+import com.chipviet.project.repository.UserRepository;
 import com.chipviet.project.service.dto.AddUserToDeviceDTO;
 import com.chipviet.project.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -41,9 +42,11 @@ public class DeviceResource {
     private String applicationName;
 
     private final DeviceRepository deviceRepository;
+    private final UserRepository userRepository;
 
-    public DeviceResource(DeviceRepository deviceRepository) {
+    public DeviceResource(DeviceRepository deviceRepository, UserRepository userRepository) {
         this.deviceRepository = deviceRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -56,6 +59,7 @@ public class DeviceResource {
     @PostMapping("/devices")
     public ResponseEntity<Device> createDevice(@RequestBody Device device) throws URISyntaxException {
         log.debug("REST request to save Device : {}", device);
+
         Device A = deviceRepository.findByDeviceUuid(device.getDeviceUuid(), device.getUsedBy());
         log.debug(" Device A : {}", A);
         if (A != null) {
@@ -64,6 +68,29 @@ public class DeviceResource {
         if (device.getId() != null) {
             throw new BadRequestAlertException("A new device cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        Optional<User> existingUser = userRepository.findOneByPhoneNumber(device.getUsedBy().toLowerCase());
+        device.setUser(existingUser.get());
+        Device result = deviceRepository.save(device);
+        return ResponseEntity
+            .created(new URI("/api/devices/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    @PostMapping("/devices/technician")
+    public ResponseEntity<Device> createDeviceForTechnician(@RequestBody Device device) throws URISyntaxException {
+        log.debug("REST request to save Device : {}", device);
+
+        Device A = deviceRepository.findByDeviceUuid(device.getDeviceUuid(), device.getUsedBy());
+        log.debug(" Device A : {}", A);
+        if (A != null) {
+            throw new BadRequestAlertException("A new device cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        if (device.getId() != null) {
+            throw new BadRequestAlertException("A new device cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        Optional<User> existingUser = userRepository.findOneByLogin(device.getUsedBy().toLowerCase());
+        device.setUser(existingUser.get());
         Device result = deviceRepository.save(device);
         return ResponseEntity
             .created(new URI("/api/devices/" + result.getId()))

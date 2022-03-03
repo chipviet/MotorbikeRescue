@@ -88,11 +88,6 @@ export const Connection = (props: RouteComponentProps<{ url: string }>) => {
             <FontAwesomeIcon icon="sync" spin={loading} />{' '}
             <Translate contentKey="mrProjectApp.connection.home.refreshListLabel">Refresh List</Translate>
           </Button>
-          <Link to={`${match.url}/new`} className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp;
-            <Translate contentKey="mrProjectApp.connection.home.createLabel">Create new Connection</Translate>
-          </Link>
         </div>
       </h2>
       <div className="table-responsive">
@@ -102,15 +97,6 @@ export const Connection = (props: RouteComponentProps<{ url: string }>) => {
               <tr>
                 <th className="hand" onClick={sort('id')}>
                   <Translate contentKey="mrProjectApp.connection.id">ID</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={sort('createAt')}>
-                  <Translate contentKey="mrProjectApp.connection.createAt">Create At</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={sort('longitude')}>
-                  <Translate contentKey="mrProjectApp.connection.longitude">Longitude</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={sort('latitude')}>
-                  <Translate contentKey="mrProjectApp.connection.latitude">Latitude</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={sort('status')}>
                   <Translate contentKey="mrProjectApp.connection.status">Status</Translate> <FontAwesomeIcon icon="sort" />
@@ -132,9 +118,6 @@ export const Connection = (props: RouteComponentProps<{ url: string }>) => {
                       {connection.id}
                     </Button>
                   </td>
-                  <td>{connection.createAt}</td>
-                  <td>{connection.longitude}</td>
-                  <td>{connection.latitude}</td>
                   <td>
                     <Translate contentKey={`mrProjectApp.ConnectionStatus.${connection.status}`} />
                   </td>
@@ -146,30 +129,6 @@ export const Connection = (props: RouteComponentProps<{ url: string }>) => {
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
-                        </span>
-                      </Button>
-                      <Button
-                        tag={Link}
-                        to={`${match.url}/${connection.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                        color="primary"
-                        size="sm"
-                        data-cy="entityEditButton"
-                      >
-                        <FontAwesomeIcon icon="pencil-alt" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.edit">Edit</Translate>
-                        </span>
-                      </Button>
-                      <Button
-                        tag={Link}
-                        to={`${match.url}/${connection.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                        color="danger"
-                        size="sm"
-                        data-cy="entityDeleteButton"
-                      >
-                        <FontAwesomeIcon icon="trash" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.delete">Delete</Translate>
                         </span>
                       </Button>
                     </div>
