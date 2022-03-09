@@ -65,7 +65,7 @@ public class ConnectionResource {
     }
 
     @PostMapping("/confirm")
-    public ResponseEntity<String> createConfirm(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
+    public ResponseEntity<?> createConfirm(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
         log.debug("REST request to save confirm : {}", confirmDTO.getRequestId());
         //        if (connection.getId() != null) {
         //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
@@ -89,11 +89,11 @@ public class ConnectionResource {
             throw e;
         }
         log.debug("request : {}", request);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, "asd")).body("Success");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/decline")
-    public ResponseEntity<String> declineConfirm(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
+    public ResponseEntity<?> declineConfirm(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
         log.debug("REST request to save confirm : {}", confirmDTO.getRequestId());
         //        if (connection.getId() != null) {
         //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
@@ -116,7 +116,7 @@ public class ConnectionResource {
         //            throw e;
         //        }
         log.debug("request : {}", request);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, "asd")).body("Success");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
