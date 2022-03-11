@@ -66,21 +66,25 @@ public class ConnectionResource {
 
     @PostMapping("/confirm")
     public ResponseEntity<?> createConfirm(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
-        log.debug("REST request to save confirm : {}", confirmDTO.getRequestId());
+        log.debug("REST request to save confirm : {}", confirmDTO.getConnectionId());
         //        if (connection.getId() != null) {
         //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
         //        }
         //        Connection result = connectionRepository.save(connection);
 
-        Optional<Request> request = requestRepository.findById(confirmDTO.getRequestId());
+        Optional<Request> request = requestRepository.findById(confirmDTO.getConnectionId());
         Optional<User> user = userRepository.findById(request.get().getUser().getId());
         log.debug("userObj.getLogin()  : {}", request.get().getId());
         log.debug("user  : {}", user);
+
         List<Device> devices = deviceRepository.findByUserObject(user);
+
+        log.debug("devices  : {}", devices);
         //        List<Device> firstUser = new ArrayList<Device>((Collection<? extends Device>) devices.get(0));
         try {
+            log.debug("vao day  : {}", confirmDTO.getConnectionId());
             PushNotificationService.sendMessageToUser(
-                confirmDTO.getRequestId(),
+                confirmDTO.getConnectionId(),
                 "Do you need help your motorbike? Please press the Accept button I will be right there to help you.",
                 devices,
                 user
@@ -94,13 +98,13 @@ public class ConnectionResource {
 
     @PostMapping("/decline")
     public ResponseEntity<?> declineConfirm(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
-        log.debug("REST request to save confirm : {}", confirmDTO.getRequestId());
+        log.debug("REST request to save confirm : {}", confirmDTO.getConnectionId());
         //        if (connection.getId() != null) {
         //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
         //        }
         //        Connection result = connectionRepository.save(connection);
 
-        Optional<Request> request = requestRepository.findById(confirmDTO.getRequestId());
+        Optional<Request> request = requestRepository.findById(confirmDTO.getConnectionId());
         Optional<User> user = userRepository.findById(request.get().getUser().getId());
         log.debug("userObj.getLogin()  : {}", request.get().getId());
         log.debug("user  : {}", user);
@@ -127,7 +131,7 @@ public class ConnectionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/connections")
-    public ResponseEntity<Connection> createConnection(@RequestBody Connection connection) throws URISyntaxException {
+    public ResponseEntity<?> createConnection(@RequestBody Connection connection) throws URISyntaxException {
         log.debug("REST request to save Connection : {}", connection.getRequest().getId());
         //        if (connection.getId() != null) {
         //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
@@ -135,12 +139,26 @@ public class ConnectionResource {
         Connection result = connectionRepository.save(connection);
 
         Optional<Request> request = requestRepository.findById(connection.getRequest().getId());
-
+        Optional<User> user = userRepository.findById(connection.getUser().getId());
+        log.debug("user  : {}", user);
         log.debug("request : {}", request);
-        return ResponseEntity
-            .created(new URI("/api/connections/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+
+        List<Device> devices = deviceRepository.findByUserObject(user);
+
+        log.debug("devices  : {}", devices);
+        //        List<Device> firstUser = new ArrayList<Device>((Collection<? extends Device>) devices.get(0));
+        try {
+            //            log.debug("vao day  : {}",   connection.getRequest().getId());
+            PushNotificationService.sendMessageToUser(
+                result.getId(),
+                "Do you need help your motorbike? Please press the Accept button I will be right there to help you.",
+                devices,
+                user
+            );
+        } catch (Exception e) {
+            throw e;
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**

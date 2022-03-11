@@ -7,21 +7,21 @@ import com.chipviet.project.domain.User;
  */
 public class ConfirmDTO {
 
-    private Long requestId;
+    private Long connectionId;
 
-    public Long getRequestId() {
-        return requestId;
+    public Long getConnectionId() {
+        return connectionId;
     }
 
-    public void setRequestId(Long requestId) {
-        this.requestId = requestId;
+    public void setConnectionId(Long connectionId) {
+        this.connectionId = connectionId;
     }
 
     // prettier-ignore
     @Override
     public String toString() {
         return "UserDTO{" +
-            "requestId='" + requestId + '\'' +
+            "connectionId='" + connectionId + '\'' +
             "}";
     }
 }
