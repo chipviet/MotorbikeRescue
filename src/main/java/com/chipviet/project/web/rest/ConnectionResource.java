@@ -65,16 +65,16 @@ public class ConnectionResource {
     }
 
     @PostMapping("/confirm")
-    public ResponseEntity<?> createConfirm(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
+    public ResponseEntity<?> confirmConnection(@RequestBody ConfirmDTO confirmDTO) throws URISyntaxException {
         log.debug("REST request to save confirm : {}", confirmDTO.getConnectionId());
         //        if (connection.getId() != null) {
         //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
         //        }
         //        Connection result = connectionRepository.save(connection);
 
-        Optional<Request> request = requestRepository.findById(confirmDTO.getConnectionId());
-        Optional<User> user = userRepository.findById(request.get().getUser().getId());
-        log.debug("userObj.getLogin()  : {}", request.get().getId());
+        Optional<Connection> connection = connectionRepository.findById(confirmDTO.getConnectionId());
+        Optional<User> user = userRepository.findById(connection.get().getUser().getId());
+        log.debug("userObj.getLogin()  : {}", connection.get().getId());
         log.debug("user  : {}", user);
 
         List<Device> devices = deviceRepository.findByUserObject(user);
@@ -83,16 +83,10 @@ public class ConnectionResource {
         //        List<Device> firstUser = new ArrayList<Device>((Collection<? extends Device>) devices.get(0));
         try {
             log.debug("vao day  : {}", confirmDTO.getConnectionId());
-            PushNotificationService.sendMessageToUser(
-                confirmDTO.getConnectionId(),
-                "Do you need help your motorbike? Please press the Accept button I will be right there to help you.",
-                devices,
-                user
-            );
+            PushNotificationService.sendMessageToUser(confirmDTO.getConnectionId(), "come here and help me now", devices, user);
         } catch (Exception e) {
             throw e;
         }
-        log.debug("request : {}", request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -139,7 +133,8 @@ public class ConnectionResource {
         Connection result = connectionRepository.save(connection);
 
         Optional<Request> request = requestRepository.findById(connection.getRequest().getId());
-        Optional<User> user = userRepository.findById(connection.getUser().getId());
+
+        Optional<User> user = userRepository.findById(request.get().getUser().getId());
         log.debug("user  : {}", user);
         log.debug("request : {}", request);
 
