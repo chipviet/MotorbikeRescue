@@ -10,6 +10,7 @@ import com.chipviet.project.repository.RequestRepository;
 import com.chipviet.project.repository.UserRepository;
 import com.chipviet.project.service.PushNotificationService;
 import com.chipviet.project.service.dto.ConfirmDTO;
+import com.chipviet.project.service.dto.LocationDTO;
 import com.chipviet.project.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -125,7 +126,7 @@ public class ConnectionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/connections")
-    public ResponseEntity<?> createConnection(@RequestBody Connection connection) throws URISyntaxException {
+    public ResponseEntity<LocationDTO> createConnection(@RequestBody Connection connection) throws URISyntaxException {
         log.debug("REST request to save Connection : {}", connection.getRequest().getId());
         //        if (connection.getId() != null) {
         //            throw new BadRequestAlertException("A new connection cannot already have an ID", ENTITY_NAME, "idexists");
@@ -139,11 +140,14 @@ public class ConnectionResource {
         log.debug("request : {}", request);
 
         List<Device> devices = deviceRepository.findByUserObject(user);
+        LocationDTO location = new LocationDTO();
+        //        Optional<Request> request = requestRepository.findById(connection.getRequest().getId());
+        location.setLatitude(request.get().getLatitude());
+        location.setLongitude(request.get().getLongitude());
 
         log.debug("devices  : {}", devices);
         //        List<Device> firstUser = new ArrayList<Device>((Collection<? extends Device>) devices.get(0));
         try {
-            //            log.debug("vao day  : {}",   connection.getRequest().getId());
             PushNotificationService.sendMessageToUser(
                 result.getId(),
                 "Do you need help your motorbike? Please press the Accept button I will be right there to help you.",
@@ -153,7 +157,11 @@ public class ConnectionResource {
         } catch (Exception e) {
             throw e;
         }
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity
+            .ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, connection.getId().toString()))
+            .body(location);
+        //        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
