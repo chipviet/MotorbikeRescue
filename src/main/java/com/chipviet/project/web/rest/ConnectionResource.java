@@ -84,7 +84,7 @@ public class ConnectionResource {
         //        List<Device> firstUser = new ArrayList<Device>((Collection<? extends Device>) devices.get(0));
         try {
             log.debug("vao day  : {}", confirmDTO.getConnectionId());
-            PushNotificationService.sendMessageToUser(confirmDTO.getConnectionId(), "come here and help me now", devices, user);
+            PushNotificationService.sendMessageToTechnician("Accepted", "come here and help me now", devices, user);
         } catch (Exception e) {
             throw e;
         }

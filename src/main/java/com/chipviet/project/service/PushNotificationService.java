@@ -130,6 +130,55 @@ public class PushNotificationService {
         }
     }
 
+    public static void sendMessageToTechnician(String title, String message, List<Device> devices, Optional<User> user) {
+        try {
+            String jsonResponse;
+
+            URL url = new URL("https://onesignal.com/api/v1/notifications");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setUseCaches(false);
+            con.setDoOutput(true);
+            con.setDoInput(true);
+
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setRequestProperty("Authorization", "Basic " + API_KEY);
+            con.setRequestMethod("POST");
+
+            List<String> deviceUuids = devices.stream().map(Device::getDeviceUuid).collect(Collectors.toList());
+
+            String[] array = deviceUuids.toArray(new String[0]);
+            System.out.println("REST request to update device cc " + converToJsonStringify(deviceUuids));
+            System.out.println("User in push notification " + user);
+            String strJsonBody =
+                "{" +
+                "\"app_id\": \"" +
+                APP_ID +
+                "\"," +
+                "\"include_player_ids\":" +
+                converToJsonStringify(deviceUuids) +
+                "," +
+                "\"data\": {\"title\": \"" +
+                title +
+                "\"}," +
+                "\"contents\": {\"en\": \"" +
+                message +
+                "\"}" +
+                "}";
+
+            byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+            con.setFixedLengthStreamingMode(sendBytes.length);
+
+            OutputStream outputStream = con.getOutputStream();
+            outputStream.write(sendBytes);
+
+            int httpResponse = con.getResponseCode();
+
+            jsonResponse = mountResponseRequest(con, httpResponse);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
     private static String converToJsonStringify(List<String> deviceUuids) {
         String result = "[";
         for (String s : deviceUuids) {
